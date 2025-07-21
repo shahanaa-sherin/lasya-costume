@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 # In .gitignore file
 .vite/
+.env/
