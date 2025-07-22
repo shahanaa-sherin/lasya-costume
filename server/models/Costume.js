@@ -1,6 +1,7 @@
 // server/models/Costume.js
 import mongoose from 'mongoose';
 
+
 const costumeSchema = new mongoose.Schema({
   name: {
     type: String,
