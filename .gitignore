@@ -7,21 +7,33 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Node modules
+node_modules/
 
-# Editor directories and files
+# Build outputs
+dist/
+dist-ssr/
+.vite/
+
+# Environment variables
+.env
+
+# IDEs and editors
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-# In .gitignore file
-.vite/
-.env/
+
+# Client-specific
+client/node_modules/
+client/dist/
+client/.env
+
+# Server-specific
+server/node_modules/
+server/.env
