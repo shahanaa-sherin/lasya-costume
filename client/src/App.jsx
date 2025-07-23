@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumeList from "./components/CostumeList";
 import AdminAddCostume from "./pages/admin/AdminAddCostume";
 import AdminCostumeList from "./pages/admin/AdminCostumeList";
+import EditCostume from "./pages/admin/EditCostume";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
           <Route path="/" element={<CostumeList />} />
           <Route path="/admin/add-costume" element={<AdminAddCostume />} />
           <Route path="/admin/costumes" element={<AdminCostumeList />} />
+          <Route path="/admin/costumes/edit/:id" element={<EditCostume />} />
+
 
         </Routes>
       </div>

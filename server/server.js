@@ -19,6 +19,8 @@ const MONGO_URL = process.env.MONGO_URL;
 app.use(cors()); // ✅ put CORS before the routes
 app.use(express.json()); 
 app.use('/api/costumes', costumeRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Connect to DB
 mongoose.connect(MONGO_URL).then(() => {

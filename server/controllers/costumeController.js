@@ -10,7 +10,18 @@ export const getCostumes = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
+// Get a single costume by ID
+export const getCostumeById = async (req, res) => {
+  try {
+    const costume = await Costume.findById(req.params.id);
+    if (!costume) {
+      return res.status(404).json({ message: "Costume not found" });
+    }
+    res.json(costume);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching costume", error: error.message });
+  }
+};
 // POST a new costume
 export const createCostume = async (req, res) => {
   try {
@@ -32,4 +43,19 @@ export const deleteCostume = async (req, res) => {
   }
 };
 
-
+// server/controllers/costumeController.js
+export const updateCostume = async (req, res) => {
+  const { name, category, size, price, available } = req.body;
+  const costume = await Costume.findById(req.params.id);
+  if (costume) {
+    costume.name = name;
+    costume.category = category;
+    costume.size = size;
+    costume.price = price;
+    costume.available = available;
+    const updated = await costume.save();
+    res.json(updated);
+  } else {
+    res.status(404).json({ message: 'Costume not found' });
+  }
+};

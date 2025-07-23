@@ -53,12 +53,7 @@ const AdminCostumeList = () => {
               <td className="p-2 border">₹{costume.price}</td>
               <td className="p-2 border">{costume.available ? "Yes" : "No"}</td>
               <td className="p-2 border flex gap-2">
-                <Link
-                  to={`/admin/edit-costume/${costume._id}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  Edit
-                </Link>
+               <Link to={`/admin/costumes/edit/${costume._id}`} className="text-blue-600">Edit</Link>
                 <button
                   onClick={() => deleteCostume(costume._id)}
                   className="text-red-500 hover:underline"
