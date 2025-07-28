@@ -12,6 +12,7 @@ const EditCostume = () => {
     size: '',
     price: '',
     available: 'Yes',
+    image:''
   });
 
   useEffect(() => {

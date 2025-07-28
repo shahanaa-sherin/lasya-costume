@@ -19,7 +19,10 @@ const MONGO_URL = process.env.MONGO_URL;
 app.use(cors()); // ✅ put CORS before the routes
 app.use(express.json()); 
 app.use('/api/costumes', costumeRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
+// app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+console.log("🗂 Serving static files from:", path.join(process.cwd(), 'uploads'));
+
 
 
 // Connect to DB
