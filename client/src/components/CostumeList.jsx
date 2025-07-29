@@ -33,7 +33,8 @@ export default function CostumeList() {
 
           <h3 className="text-lg font-bold">{item.name}</h3>
           <p>{item.description}</p>
-          <p className="text-sm text-gray-500">₹{item.price}</p>
+            <p className="text-sm text-gray-700">Size: {item.size}</p> 
+          <p className="text-md text-gray-500">Price: ₹{item.price}</p>
         </div>
       ))}
     </div>
