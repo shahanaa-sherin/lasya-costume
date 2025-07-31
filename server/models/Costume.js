@@ -1,7 +1,6 @@
 // server/models/Costume.js
 import mongoose from 'mongoose';
 
-
 const costumeSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -21,5 +20,4 @@ const costumeSchema = new mongoose.Schema({
 });
 
 const Costume = mongoose.model('Costume', costumeSchema);
-
 export default Costume;

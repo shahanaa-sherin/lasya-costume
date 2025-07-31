@@ -1,9 +1,4 @@
 
-
-
-
-
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumeList from "./components/CostumeList";
 import AdminAddCostume from "../src/pages/admin/AdminAddCostume";
@@ -11,7 +6,7 @@ import AdminCostumeList from "../src/pages/admin/AdminCostumeList";
 import EditCostume from "../src/pages/admin/EditCostume";
 import Home from "../src/pages/user/Home"; // ✅ this is user-facing home
 import Header from "./components/Header";
-import './App.css';
+import "./App.css";
 // In your main entry file, e.g. index.js or App.jsx
 
 

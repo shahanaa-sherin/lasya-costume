@@ -4,7 +4,12 @@ import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors'; // ✅ FIXED
 import { fileURLToPath } from 'url';
-import costumeRoutes from './routes/costumeRoutes.js';
+import costumeRoutes from './routes/costume.js'; // ✅ include .js
+
+
+
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +25,8 @@ app.use(cors()); // ✅ put CORS before the routes
 app.use(express.json()); 
 app.use('/api/costumes', costumeRoutes);
 app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
+
+
 // app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 console.log("🗂 Serving static files from:", path.join(process.cwd(), 'uploads'));
 

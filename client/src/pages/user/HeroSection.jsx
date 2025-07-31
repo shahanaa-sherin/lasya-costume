@@ -6,7 +6,6 @@ import "swiper/css/effect-fade";
 const images = [
   "/images/hero-img3.jpg",
   "/images/hero-img10.jpg",
-  "/images/hero-img5.jpg",
   "/images/hero-img11.jpg",
   "/images/hero-img12.jpg",
 

@@ -32,56 +32,62 @@ const AdminCostumeList = () => {
   }, []);
 
   return (
-  <div className="p-6">
-    <h2 className="text-3xl font-bold mb-6 text-center text-red-700">Costume List (Admin Panel)</h2>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4">Costume List (Admin Panel)</h2>
+      <table className="min-w-full bg-white border rounded-md shadow">
+        <thead className="bg-gray-100 text-left">
+          <tr>
+            <th className="p-2 border">Image</th>
+            <th className="p-2 border">Name</th>
+            <th className="p-2 border">Category</th>
+            <th className="p-2 border">Size</th>
+            <th className="p-2 border">Price</th>
+            <th className="p-2 border">Available</th>
+            <th className="p-2 border">Actions</th>
+          </tr>
+        </thead>
 
-    <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      {costumes.map((costume) => (
-        <div
-          key={costume._id}
-          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300"
-        >
-          <img
-            src={`http://localhost:5000${costume.image}`}
-            alt={costume.name}
-            className="h-64 w-full object-cover"
-            onError={(e) => (e.target.src = "/fallback-image.png")}
-          />
+        <tbody>
+          {costumes.map((costume) => (
+            <tr key={costume._id}>
+              <td className="p-2 border">
+                {costume.image && (
+                  <img
+                    src={`http://localhost:5000${costume.image}`}
+                    alt={costume.name}
+                    onError={(e) => {
+                      e.target.src = "/fallback-image.png"; // optional
+                    }}
+                  />
+                )}
+              </td>
 
-          <div className="p-4 space-y-2">
-            <h3 className="text-xl font-semibold text-gray-800">{costume.name}</h3>
-            <p className="text-sm text-gray-500">Category: {costume.category}</p>
-            <p className="text-sm text-gray-500">Size: {costume.size}</p>
-            <p className="text-sm text-gray-500">Price: ₹{costume.price}</p>
-            <p
-              className={`text-sm font-medium ${
-                costume.available ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              Available: {costume.available ? "Yes" : "No"}
-            </p>
+              <td className="p-2 border">{costume.name}</td>
+              <td className="p-2 border">{costume.category}</td>
+              <td className="p-2 border">{costume.size}</td>
+              <td className="p-2 border">₹{costume.price}</td>
+              <td className="p-2 border">{costume.available ? "Yes" : "No"}</td>
+              <td className="p-2 border flex gap-2">
+                <Link
+                  to={`/admin/costumes/edit/${costume._id}`}
+                  className="text-blue-600"
+                >
+                  Edit
+                </Link>
 
-            <div className="flex justify-end gap-4 pt-2">
-              <Link
-                to={`/admin/costumes/edit/${costume._id}`}
-                className="text-blue-600 hover:underline"
-              >
-                Edit
-              </Link>
-              <button
-                onClick={() => deleteCostume(costume._id)}
-                className="text-red-500 hover:underline"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
+                <button
+                  onClick={() => deleteCostume(costume._id)}
+                  className="text-red-500 hover:underline"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  </div>
-);
-
+  );
 };
 
 export default AdminCostumeList;
