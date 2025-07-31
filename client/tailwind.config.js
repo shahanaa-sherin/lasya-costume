@@ -1,9 +1,12 @@
 /** @type {import('tailwindcss').Config} */
-export const content = [
-  "./index.html",
-  "./src/**/*.{js,jsx,ts,tsx}",
-];
-export const theme = {
-  extend: {},
-};
-export const plugins = [];
+export default {
+  content: ["./src/**/*.{js,ts,jsx,tsx,html}"], // Adjust this path based on your project
+  theme: {
+    extend: {
+     
+    },
+  },
+  plugins: [
+    
+  ],
+}

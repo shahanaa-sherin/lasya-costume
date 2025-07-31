@@ -1,19 +1,20 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
 const images = [
-  "/images/hero-img8.jpg",
-  "/images/hero-img1.jpg",
-  "/images/hero-img2.jpg",
+  "/images/hero-img3.jpg",
+  "/images/hero-img10.jpg",
   "/images/hero-img5.jpg",
+  "/images/hero-img11.jpg",
+  "/images/hero-img12.jpg",
+
 ];
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[80vh] overflow-hidden">
+    <section className="relative h-screen overflow-hidden">
       <Swiper
         modules={[Autoplay, EffectFade]}
         slidesPerView={1}
@@ -24,21 +25,16 @@ const HeroSection = () => {
           delay: 3000,
           disableOnInteraction: false,
         }}
-        className=" h-[80vh]"
+        className="h-full"
       >
         {images.map((src, idx) => (
-          <SwiperSlide key={idx}>
-            <div className="h-[80vh]">
+          <SwiperSlide key={idx} className="h-full">
+            <div className="h-full">
               <img
                 src={src}
                 alt={`Slide ${idx + 1}`}
-                className=" h-full object-cover object-center"
+                className="w-full h-full object-cover object-center"
                 loading="eager"
-                style={{
-                  imageRendering: "auto",
-                  width: "100%",
-                  height: "100%",
-                }}
               />
             </div>
           </SwiperSlide>
