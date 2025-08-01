@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
 import axios from "axios";
@@ -12,158 +12,165 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const suggestionsRef = useRef(null);
 
-  // Scroll behavior
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      setMenuOpen(false);
-    } else {
-      navigate("/");
-      setTimeout(() => {
-        const target = document.getElementById(id);
-        if (target) target.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-  };
-
-  // Fetch suggestions while typing
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (!searchCategory) {
-        setSuggestions([]);
-        return;
-      }
+      if (!searchCategory) return setSuggestions([]);
       try {
-        const response = await axios.get(
+        const res = await axios.get(
           `http://localhost:5000/api/costumes/suggestions?query=${searchCategory}`
         );
-        setSuggestions(response.data || []);
-      } catch (error) {
-        console.error("Suggestion fetch error:", error);
+        setSuggestions(res.data || []);
+      } catch (err) {
+        console.error("Suggestion fetch error:", err);
         setSuggestions([]);
       }
     };
-
-    const delayDebounce = setTimeout(fetchSuggestions, 300); // Debounce
-    return () => clearTimeout(delayDebounce);
+    const debounce = setTimeout(fetchSuggestions, 300);
+    return () => clearTimeout(debounce);
   }, [searchCategory]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchCategory.trim()) {
       navigate(`/search?category=${encodeURIComponent(searchCategory.trim())}`);
-      setMenuOpen(false);
       setShowSuggestions(false);
+      setMenuOpen(false);
     }
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchCategory(suggestion);
-    navigate(`/search?category=${encodeURIComponent(suggestion)}`);
+    setSearchCategory(suggestion.name || suggestion.category);
+    navigate(`/search?category=${encodeURIComponent(suggestion.name || suggestion.category)}`);
     setShowSuggestions(false);
+    setMenuOpen(false);
+  };
+
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      const yOffset = -80;
+      const y = section.getBoundingClientRect().top + window.scrollY + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+      setMenuOpen(false);
+    } else {
+      navigate("/");
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          const yOffset = -80;
+          const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }, 200);
+    }
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-black/80 text-white shadow-md backdrop-blur-md border-b border-yellow-500">
+    <header className="fixed top-0 left-0 w-full z-50 bg-black/80 text-white shadow-md backdrop-blur-md border-b border-yellow-100">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <img
             src="/images/headerimg/LasyaLogo.png"
             alt="Lasya Logo"
-            className="w-28 h-auto object-contain drop-shadow-md rounded-full"
+            className="w-16 h-auto object-contain drop-shadow rounded-full"
           />
         </Link>
 
-        {/* Mobile menu */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="text-white text-2xl"
-          >
-            {menuOpen ? "✕" : "☰"}
-          </button>
-        </div>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="text-2xl focus:outline-none md:hidden"
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
 
-        {/* Navigation */}
         <nav
-          className={`absolute md:static bg-black md:bg-transparent left-0 w-full md:w-auto transition-all duration-300 ease-in-out px-6 md:px-0 py-4 md:py-0 md:flex items-center gap-6 text-sm font-medium ${
+          className={`absolute top-[72px] left-0 w-full bg-black px-6 py-4 flex flex-col gap-4 text-sm font-medium transition-all duration-300 md:static md:bg-transparent md:flex md:flex-row md:gap-6 md:py-0 md:px-0 ${
             menuOpen ? "block" : "hidden md:flex"
           }`}
         >
           {!isAdminRoute ? (
             <>
-              {/* Search with Autocomplete */}
+              {/* Search Box */}
               <form
                 onSubmit={handleSearch}
-                className="relative flex flex-col gap-1 mb-4 md:mb-0"
+                className="relative w-full md:w-72 lg:w-96"
+                ref={suggestionsRef}
               >
-                <input
-                  type="text"
-                  placeholder="Search by category..."
-                  value={searchCategory}
-                  onChange={(e) => {
-                    setSearchCategory(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  className="px-3 py-1 rounded-md text-black"
-                />
-
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search by category..."
+                    value={searchCategory}
+                    onChange={(e) => {
+                      setSearchCategory(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    className="w-full px-4 py-2 pr-10 rounded-full text-black shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  />
+                  {searchCategory && (
+                    <button
+                      type="button"
+                      className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-red-600 text-lg"
+                      onClick={() => {
+                        setSearchCategory("");
+                        setSuggestions([]);
+                        setShowSuggestions(false);
+                      }}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
                 {showSuggestions && suggestions.length > 0 && (
-                  <ul className="absolute top-full left-0 w-full bg-white text-black border border-gray-300 rounded shadow-md z-50 max-h-40 overflow-y-auto">
-                    {suggestions.map((suggestion, index) => (
+                  <ul className="absolute top-full left-0 w-full bg-white text-black border mt-2 rounded-xl shadow-lg z-50 max-h-52 overflow-y-auto text-sm">
+                    {suggestions.map((s, idx) => (
                       <li
-                        key={index}
+                        key={idx}
+                        onClick={() => handleSuggestionClick(s)}
                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => handleSuggestionClick(suggestion)}
                       >
-                       {suggestion.name} - {suggestion.category}
+                        {s.name} - {s.category}
                       </li>
                     ))}
                   </ul>
                 )}
               </form>
 
-              {/* Scrollable links */}
-              <button
-                onClick={() => scrollToSection("costumes")}
-                className="hover:text-yellow-400 transition"
-              >
-                Costumes
-              </button>
-              <button
-                onClick={() => scrollToSection("about")}
-                className="hover:text-yellow-400 transition"
-              >
-                About
-              </button>
-              <button
-                onClick={() => scrollToSection("gallery")}
-                className="hover:text-yellow-400 transition"
-              >
-                Gallery
-              </button>
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="hover:text-yellow-400 transition"
-              >
-                Contact
-              </button>
+              {/* Navigation Sections */}
+              {["costumes", "about", "gallery", "contact"].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => {
+                    scrollToSection(section);
+                    setActiveSection(section);
+                  }}
+                  className={`hover:text-yellow-400 transition ${
+                    activeSection === section ? "text-yellow-400 font-bold" : ""
+                  }`}
+                >
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </button>
+              ))}
             </>
           ) : (
             <>
-              <Link
-                to="/admin/costumes"
-                className="hover:text-yellow-400 transition"
-              >
+              <Link to="/admin/costumes" className="hover:text-yellow-400">
                 Admin List
               </Link>
-              <Link
-                to="/admin/add-costume"
-                className="hover:text-yellow-400 transition"
-              >
+              <Link to="/admin/add-costume" className="hover:text-yellow-400">
                 Add Costume
               </Link>
             </>
