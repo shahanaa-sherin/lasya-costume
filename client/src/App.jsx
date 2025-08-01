@@ -1,4 +1,4 @@
-
+import { SearchProvider } from "./context/SearchContext"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CostumeList from "./components/CostumeList";
 import AdminAddCostume from "../src/pages/admin/AdminAddCostume";
@@ -7,30 +7,31 @@ import EditCostume from "../src/pages/admin/EditCostume";
 import Home from "../src/pages/user/Home"; // ✅ this is user-facing home
 import Header from "./components/Header";
 import "./App.css";
+import SearchResults from "./pages/SearchResults";
 // In your main entry file, e.g. index.js or App.jsx
 
 
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-green-50">
-       <Header />
-        <Routes>
-          {/* 👇 User Route */}
-          <Route path="/" element={<Home />} />
+    <SearchProvider>
+      <Router>
+        <div className="min-h-screen bg-green-50">
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
 
-
-          {/* 👇 Admin Routes */}
-          <Route path="/admin/add-costume" element={<AdminAddCostume />} />
-          <Route path="/admin/costumes" element={<AdminCostumeList />} />
-          <Route path="/admin/costumes/edit/:id" element={<EditCostume />} />
-
-          {/* Optional: Public costume list page */}
-          <Route path="/costumes" element={<CostumeList />} />
-        </Routes>
-      </div>
-    </Router>
+            {/* admin routes */}
+            <Route path="/admin/add-costume" element={<AdminAddCostume />} />
+            <Route path="/admin/costumes" element={<AdminCostumeList />} />
+            <Route path="/admin/costumes/edit/:id" element={<EditCostume />} />
+            {/* optional costume list */}
+            <Route path="/costumes" element={<CostumeList />} />
+            <Route path="/search" element={<SearchResults />} />
+          </Routes>
+        </div>
+      </Router>
+    </SearchProvider>
   );
 }
 

@@ -6,6 +6,7 @@ import Gallery from './Gallery';
 import ContactUs from './ContactUs';
 
 const Home = () => {
+   
   return (
     <>
       <HeroSection />
